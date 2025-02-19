@@ -4,11 +4,11 @@ class SnakeGame {
         this.ctx = this.canvas.getContext('2d');
         
         // 设置画布大小
-        this.canvas.width = 400;
-        this.canvas.height = 400;
+        this.canvas.width = 600;
+        this.canvas.height = 600;
         
         // 游戏网格大小
-        this.gridSize = 20;
+        this.gridSize = 25;
         this.tileCount = this.canvas.width / this.gridSize;
         
         // 初始化游戏状态
@@ -45,6 +45,7 @@ class SnakeGame {
         this.isRunning = false;
         this.score = 0;
         this.highScore = localStorage.getItem('snakeHighScore') || 0;
+        this.baseSpeed = 200;
         
         // 更新分数显示
         this.updateScore();
@@ -186,13 +187,18 @@ class SnakeGame {
         });
     }
     
+    getCurrentSpeed() {
+        const speedReduction = Math.floor(this.score / 100) * 20;
+        return Math.max(50, this.baseSpeed - speedReduction);
+    }
+    
     gameLoop() {
         if (!this.isRunning) return;
         
         this.update();
         this.draw();
         
-        setTimeout(() => requestAnimationFrame(() => this.gameLoop()), 100);
+        setTimeout(() => requestAnimationFrame(() => this.gameLoop()), this.getCurrentSpeed());
     }
     
     showTutorial() {
